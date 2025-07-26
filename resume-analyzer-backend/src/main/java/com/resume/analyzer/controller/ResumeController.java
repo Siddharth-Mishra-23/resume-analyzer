@@ -100,4 +100,10 @@ public class ResumeController {
                 ? ResponseEntity.ok("Final summary email sent to " + email)
                 : ResponseEntity.badRequest().body("❌ Failed to send email. Make sure the user is verified and resume is uploaded.");
     }
+// ✅ Health check route for Railway root "/"
+@GetMapping("/")
+public ResponseEntity<String> home() {
+    return ResponseEntity.ok("✅ Resume Analyzer backend is running on Railway!");
+}
+
 }
