@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Resume Analyzer</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .footer {
+      text-align: center;
+      margin-top: 30px;
+      color: #00ffcc;
+      font-size: 0.9em;
+    }
+    .footer a {
+      color: #00ffcc;
+      text-decoration: none;
+      margin: 0 5px;
+    }
+    .footer a:hover {
+      text-decoration: underline;
+    }
+    .glitter-text {
+      animation: shimmer 2s infinite linear;
+      background: linear-gradient(90deg, #00ffcc, #ffffff, #00ffcc);
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-weight: bold;
+    }
+    @keyframes shimmer {
+      0% { background-position: -200% center; }
+      100% { background-position: 200% center; }
+    }
+
+    /* Ensure visited links remain bright */
+    a:visited {
+      color: #00ffcc;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Resume Analyzer</h1>
+
+    <!-- Step 1: OTP -->
+    <div id="step1" class="step">
+      <h2>Step 1: Verify Email</h2>
+      <input type="text" id="name" placeholder="Your Name" />
+      <input type="email" id="email" placeholder="Your Email" />
+      <button onclick="sendOTP()">Send OTP</button>
+      <p id="otpStatus"></p>
+    </div>
+
+    <!-- Step 2: OTP Verification -->
+    <div id="step2" class="step hidden">
+      <h2>Step 2: Enter OTP</h2>
+      <input type="text" id="otp" placeholder="Enter OTP" />
+      <button onclick="verifyOTP()">Verify</button>
+      <p id="verifyStatus"></p>
+    </div>
+
+    <!-- Step 3: Resume Upload -->
+    <div id="step3" class="step hidden">
+      <h2>Step 3: Upload Resume</h2>
+      <input type="file" id="resumeFile" />
+      <button onclick="uploadResume()">Upload Resume</button>
+      <p id="uploadStatus"></p>
+    </div>
+
+    <!-- Step 4: Job Description Input -->
+    <div id="step4" class="step hidden">
+      <h2>Step 4: Enter Job Description</h2>
+      <textarea id="jobDescription" placeholder="Paste the job description here..."></textarea>
+      <button onclick="analyzeResume()">Analyze</button>
+      <p id="analyzeStatus"></p>
+    </div>
+
+    <!-- Step 5: Result -->
+    <div id="step5" class="step hidden">
+      <h2>Result</h2>
+      <div id="matchPercent" class="circle">0%</div>
+      <h3>Missing Skills</h3>
+      <table id="skillsTable"></table>
+      <h3>Recommended Jobs</h3>
+      <ul id="jobList"></ul>
+
+      <!-- Glitter wait message + Final mail status -->
+      <div id="waitMessage" class="glitter-text"></div>
+      <p id="finalMailStatus" class="glitter-text"></p>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <p>📧 talk2sid76@gmail.com | 📍 India | 🔗 
+      <a href="https://github.com/Siddharth-Mishra-23" target="_blank">GitHub</a> | 
+      <a href="https://www.linkedin.com/in/siddharth-mishra-baa317256/" target="_blank">LinkedIn</a>
+    </p>
+    <p>&copy; 2025 $!D | Resume Analyzer</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
