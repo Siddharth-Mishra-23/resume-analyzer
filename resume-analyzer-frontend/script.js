@@ -1,4 +1,4 @@
-const baseUrl = "https://resume-analyzer-production-bcfd.up.railway.app/api/resume";
+const baseUrl = "http://localhost:8081/api/resume";
 
 function sendOTP() {
   const name = document.getElementById("name").value;
@@ -11,7 +11,7 @@ function sendOTP() {
   const status = document.getElementById("otpStatus");
   status.textContent = "📤 Sending OTP...";
 
-  fetch(`${baseUrl}/send-otp`, {
+  fetch("http://localhost:8081/api/resume/send-otp", {
     method: "POST",
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
     body: formData.toString()
@@ -39,7 +39,7 @@ function verifyOTP() {
   const status = document.getElementById("verifyStatus");
   status.textContent = "🔐 Verifying OTP...";
 
-  fetch(`${baseUrl}/verify-otp`, {
+  fetch("http://localhost:8081/api/resume/verify-otp", {
     method: "POST",
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
     body: formData.toString()
@@ -66,7 +66,7 @@ function uploadResume() {
   const status = document.getElementById("uploadStatus");
   status.textContent = "📤 Uploading resume...";
 
-  fetch(`${baseUrl}/upload`, {
+  fetch("http://localhost:8081/api/resume/upload", {
     method: "POST",
     body: formData
   })
