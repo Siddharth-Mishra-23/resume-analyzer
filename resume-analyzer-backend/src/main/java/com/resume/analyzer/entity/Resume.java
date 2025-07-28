@@ -22,6 +22,7 @@ public class Resume {
 
     // ✅ Fields for OTP verification
     private String otp;
+    @Column(columnDefinition = "BOOLEAN")
     private boolean verified;
     @Lob
     @Column(columnDefinition = "TEXT")
