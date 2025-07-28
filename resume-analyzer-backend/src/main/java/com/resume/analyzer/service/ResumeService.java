@@ -136,7 +136,11 @@ public class ResumeService {
             
             System.out.println("🛠 Extracted Skills from Resume: " + matchedSkills);
 
-
+            // ✅ Ensure uploads directory exists
+ 	    File uploadDir = new File(UPLOAD_DIR);
+	    if (!uploadDir.exists()) {
+  	    uploadDir.mkdirs();
+	    }
             Path filePath = Paths.get(UPLOAD_DIR, file.getOriginalFilename());
             file.transferTo(filePath.toFile());
 
