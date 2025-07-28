@@ -3,8 +3,11 @@ package com.resume.analyzer.controller;
 import com.resume.analyzer.entity.Candidate;
 import com.resume.analyzer.service.CandidateService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -15,9 +18,14 @@ public class CandidateController {
     private CandidateService candidateService;
 
     @PostMapping
-    public Candidate addCandidate(@RequestBody Candidate candidate) {
-    	 System.out.println("Received: " + candidate);
-        return candidateService.saveCandidate(candidate);
+    public ResponseEntity<?> addCandidate(@Valid @RequestBody Candidate candidate, BindingResult result) {
+        if (result.hasErrors()) {
+            return ResponseEntity.badRequest().body("❌ Invalid input: Please check name and email.");
+        }
+
+        System.out.println("Received: " + candidate);
+        Candidate savedCandidate = candidateService.saveCandidate(candidate);
+        return ResponseEntity.ok(savedCandidate);
     }
 
     @GetMapping
