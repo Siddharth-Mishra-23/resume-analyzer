@@ -40,12 +40,13 @@
             <artifactId>spring-boot-starter-mail</artifactId>
         </dependency>
 
-        <!-- MySQL Driver -->
-        <dependency>
-            <groupId>com.mysql</groupId>
-            <artifactId>mysql-connector-j</artifactId>
-            <scope>runtime</scope>
-        </dependency>
+<!-- ✅ ADD this -->
+<dependency>
+    <groupId>org.postgresql</groupId>
+    <artifactId>postgresql</artifactId>
+    <scope>runtime</scope>
+</dependency>
+
 
         <!-- DevTools (Hot reload for development) -->
         <dependency>
