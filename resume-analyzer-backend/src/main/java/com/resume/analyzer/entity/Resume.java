@@ -21,8 +21,9 @@ public class Resume {
     private String filePath;
 
     @Lob
-    @Column(name = "resume_file", columnDefinition = "BYTEA")
-    private byte[] resumeFile;
+@Column(name = "resume_file")
+private byte[] resumeFile;
+
 
 
     // ✅ Fields for OTP verification
