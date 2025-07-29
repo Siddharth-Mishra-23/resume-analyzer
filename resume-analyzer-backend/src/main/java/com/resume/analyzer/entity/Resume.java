@@ -20,6 +20,9 @@ public class Resume {
     private String skills;
     private String filePath;
 
+@Lob
+    @Column(name = "resume_file", columnDefinition = "LONGBLOB")
+    private byte[] resumeFile;
     // ✅ Fields for OTP verification
     private String otp;
     @Column(columnDefinition = "BOOLEAN")
@@ -71,6 +74,14 @@ public class Resume {
     public void setResumeText(String resumeText) {
         this.resumeText = resumeText;
     }
+public byte[] getResumeFile() {
+    return resumeFile;
+}
+
+public void setResumeFile(byte[] resumeFile) {
+    this.resumeFile = resumeFile;
+}
+
 
 
 }
