@@ -12,9 +12,8 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/resume")
-@CrossOrigin(origins = "https://siddharth-mishra-23.github.io")
+@CrossOrigin(origins = "http://localhost:8000", allowCredentials = "true")
 public class ResumeController {
-
 
     @Autowired
     private ResumeService resumeService;

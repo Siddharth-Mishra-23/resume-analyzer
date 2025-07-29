@@ -11,13 +11,10 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.beans.factory.annotation.Value;
-
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -29,6 +26,7 @@ import java.util.stream.Collectors;
 @Service
 public class ResumeService {
 
+    private static final String UPLOAD_DIR = "D:/java ee/resume-analyzer-backend/uploads";
 
     @Autowired
     private ResumeRepository repository;
@@ -41,9 +39,6 @@ public class ResumeService {
 
     @Autowired
     private JobRecommendationService jobRecommendationService;
-
- @Value("${file.upload-dir}")
-    private String UPLOAD_DIR;
 
     private final Tika tika = new Tika();
 
@@ -85,7 +80,7 @@ public class ResumeService {
             "platform", "product", "field", "area", "internship", "2023", "2024", "2025", "2026"
         );
 
-     // 🔹 Get all resumes
+    // 🔹 Get all resumes
     public List<Resume> getAllResumes() {
         return repository.findAll();
     }
@@ -138,13 +133,9 @@ public class ResumeService {
                     .filter(skill -> extractedText.toLowerCase().contains(skill.toLowerCase()))
                     .distinct()
                     .collect(Collectors.toList());
-
+            
             System.out.println("🛠 Extracted Skills from Resume: " + matchedSkills);
 
-            File uploadDir = new File(UPLOAD_DIR);
-            if (!uploadDir.exists()) {
-                uploadDir.mkdirs();
-            }
 
             Path filePath = Paths.get(UPLOAD_DIR, file.getOriginalFilename());
             file.transferTo(filePath.toFile());
@@ -180,22 +171,26 @@ public class ResumeService {
 
         Set<String> resumeSkillsSet = Arrays.stream(resumeSkills.split(",\\s*"))
                 .map(String::toLowerCase).collect(Collectors.toSet());
-
+        
         System.out.println("📄 Resume Skills: " + resumeSkillsSet);
 
+
+        // Tokenize JD text into individual meaningful words
         Set<String> jdWords = Arrays.stream(jobDescription.toLowerCase().split("[^a-zA-Z0-9+#.\\-]"))
                 .filter(word -> word.length() > 1 && !ignoreWords.contains(word))
                 .collect(Collectors.toSet());
-
+        
         System.out.println("📝 JD Words: " + jdWords);
 
+
+        // For multi-word skills, match full phrase in JD; else match by presence in jdWords
         long matched = resumeSkillsSet.stream().filter(skill -> {
             String lower = skill.toLowerCase();
             return jobDescription.toLowerCase().contains(lower) || jdWords.contains(lower);
         }).count();
 
-        System.out.println("✅ Matched Skills Count: " + matched);
-        System.out.println("📊 Match Percentage: " + (matched * 100.0 / resumeSkillsSet.size()));
+    	System.out.println("✅ Matched Skills Count: " + matched);
+    	System.out.println("📊 Match Percentage: " + (matched * 100.0 / resumeSkillsSet.size()));
 
         return resumeSkillsSet.isEmpty() ? 0.0 :
                 Math.round((matched * 100.0 / resumeSkillsSet.size()) * 100.0) / 100.0;
@@ -237,18 +232,15 @@ public class ResumeService {
 
         Resume resume = optionalResume.get();
         String resumeSkills = resume.getSkills();
-if (resumeSkills == null || resumeSkills.trim().isEmpty() || resumeSkills.equalsIgnoreCase("Not Found")) {
-    return Collections.emptyList();
-}
+        if (resumeSkills == null || resumeSkills.equalsIgnoreCase("Not Found")) {
+            return Collections.emptyList();
+        }
 
-List<String> topSkills = Arrays.stream(resumeSkills.split(",\\s*"))
-    .map(String::trim)
-    .filter(s -> !s.isEmpty())
-    .map(String::toLowerCase)
-    .distinct()
-    .limit(3)
-    .toList();
-
+        List<String> topSkills = Arrays.stream(resumeSkills.split(",\\s*"))
+                .map(String::toLowerCase)
+                .distinct()
+                .limit(3)
+                .toList();
 
         List<Map<String, String>> jobResults = new ArrayList<>();
         for (String skill : topSkills) {

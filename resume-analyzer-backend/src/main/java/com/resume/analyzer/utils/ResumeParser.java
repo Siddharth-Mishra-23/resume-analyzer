@@ -1,20 +1,16 @@
 package com.resume.analyzer.utils;
 
-import org.apache.tika.metadata.Metadata;
-import org.apache.tika.parser.AutoDetectParser;
-import org.apache.tika.sax.BodyContentHandler;
+import org.apache.tika.Tika;
 
 import java.io.InputStream;
 
 public class ResumeParser {
 
+    private static final Tika tika = new Tika();
+
     public static String extractText(InputStream inputStream) {
         try {
-            AutoDetectParser parser = new AutoDetectParser();
-            BodyContentHandler handler = new BodyContentHandler(-1); // -1 for unlimited length
-            Metadata metadata = new Metadata();
-            parser.parse(inputStream, handler, metadata);
-            return handler.toString();
+            return tika.parseToString(inputStream);
         } catch (Exception e) {
             e.printStackTrace();
             return "";
