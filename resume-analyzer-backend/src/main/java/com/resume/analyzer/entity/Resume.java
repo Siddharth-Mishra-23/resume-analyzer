@@ -20,9 +20,11 @@ public class Resume {
     private String skills;
     private String filePath;
 
-@Lob
-    @Column(name = "resume_file", columnDefinition = "LONGBLOB")
+    @Lob
+    @Column(name = "resume_file", columnDefinition = "BYTEA")
     private byte[] resumeFile;
+
+
     // ✅ Fields for OTP verification
     private String otp;
     @Column(columnDefinition = "BOOLEAN")
