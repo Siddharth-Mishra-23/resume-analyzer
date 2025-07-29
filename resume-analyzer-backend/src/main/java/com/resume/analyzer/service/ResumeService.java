@@ -237,15 +237,18 @@ public class ResumeService {
 
         Resume resume = optionalResume.get();
         String resumeSkills = resume.getSkills();
-        if (resumeSkills == null || resumeSkills.equalsIgnoreCase("Not Found")) {
-            return Collections.emptyList();
-        }
+if (resumeSkills == null || resumeSkills.trim().isEmpty() || resumeSkills.equalsIgnoreCase("Not Found")) {
+    return Collections.emptyList();
+}
 
-        List<String> topSkills = Arrays.stream(resumeSkills.split(",\\s*"))
-                .map(String::toLowerCase)
-                .distinct()
-                .limit(3)
-                .toList();
+List<String> topSkills = Arrays.stream(resumeSkills.split(",\\s*"))
+    .map(String::trim)
+    .filter(s -> !s.isEmpty())
+    .map(String::toLowerCase)
+    .distinct()
+    .limit(3)
+    .toList();
+
 
         List<Map<String, String>> jobResults = new ArrayList<>();
         for (String skill : topSkills) {
