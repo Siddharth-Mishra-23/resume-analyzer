@@ -90,9 +90,10 @@ View skill match %, missing skills, and job recommendations
 Download results as JSON
 
 ### 🔐 OTP Verification
-![OTP Verification](Screenshot (635).png)
+![OTP Verification](Screenshot%20%28635%29.png)
 
 ### 📄 Resume Upload
-![Resume Upload](Screenshot (636).png)
+![Resume Upload](Screenshot%20%28636%29.png)
+
 
 
