@@ -14,15 +14,6 @@ An AI-powered web application that analyzes resumes, matches them with job descr
 
 ---
 
-## 🌐 Live Demo
-
-Frontend: [resume-analyzer-frontend](https://your-frontend-url)  
-Backend: [resume-analyzer-backend](https://your-backend-url)
-
-> ⚠️ Update the links after deployment.
-
----
-
 ## 📁 Project Structure
 
 ```bash
