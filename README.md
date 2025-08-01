@@ -90,6 +90,3 @@ View skill match %, missing skills, and job recommendations
 Download results as JSON
 
 
-Project Flow :
-
-<img width="1920" height="1080" alt="Screenshot (620)" src="https://github.com/user-attachments/assets/d1eb8108-a7ce-491e-a56d-277f289858e7" />
