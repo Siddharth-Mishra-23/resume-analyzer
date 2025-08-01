@@ -89,4 +89,5 @@ View skill match %, missing skills, and job recommendations
 
 Download results as JSON
 
+![Alt text](images/Screenshot (620).png)
 
