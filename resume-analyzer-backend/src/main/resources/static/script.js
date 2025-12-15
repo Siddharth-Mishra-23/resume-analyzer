@@ -1,4 +1,4 @@
-
+// Use relative path so front + back share the same origin when served by Spring Boot
 const baseUrl = "/api/resume";
 
 function sendOTP() {

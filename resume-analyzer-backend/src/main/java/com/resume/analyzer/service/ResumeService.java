@@ -18,6 +18,9 @@ import jakarta.mail.internet.MimeMessage;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
+
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -26,7 +29,8 @@ import java.util.stream.Collectors;
 @Service
 public class ResumeService {
 
-    private static final String UPLOAD_DIR = "D:/java ee/resume-analyzer-backend/uploads";
+   private static final String UPLOAD_DIR = "uploads";
+
 
     @Autowired
     private ResumeRepository repository;
@@ -116,46 +120,67 @@ public class ResumeService {
     }
 
     // 🔹 Resume upload and parsing
-    public ResponseEntity<String> uploadResume(MultipartFile file, String email) {
-        Optional<Resume> optionalResume = repository.findByEmail(email);
-        if (optionalResume.isEmpty() || !optionalResume.get().isVerified()) {
-            return ResponseEntity.status(403).body("Email not verified. Please complete OTP verification first.");
-        }
+   public ResponseEntity<String> uploadResume(MultipartFile file, String email) {
 
-        try {
-            byte[] fileBytes = file.getBytes();
-            String extractedText = ResumeParser.extractText(file.getInputStream());
-
-            String extractedEmail = extractEmail(extractedText);
-            String extractedPhone = extractPhone(extractedText);
-
-            List<String> matchedSkills = knownSkills.stream()
-                    .filter(skill -> extractedText.toLowerCase().contains(skill.toLowerCase()))
-                    .distinct()
-                    .collect(Collectors.toList());
-            
-            System.out.println("🛠 Extracted Skills from Resume: " + matchedSkills);
-
-
-            Path filePath = Paths.get(UPLOAD_DIR, file.getOriginalFilename());
-            file.transferTo(filePath.toFile());
-
-            Resume resume = optionalResume.get();
-            resume.setPhone(extractedPhone != null ? extractedPhone : "Not Found");
-            resume.setSkills(!matchedSkills.isEmpty() ? String.join(", ", matchedSkills) : "Not Found");
-            resume.setFilePath(filePath.toString());
-            if (resume.getJobDescription() == null) {
-                resume.setJobDescription("Not provided");
-            }
-
-            repository.save(resume);
-            return ResponseEntity.ok("Resume uploaded and parsed successfully.");
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            return ResponseEntity.internalServerError().body("Failed to upload or parse resume.");
-        }
+    Optional<Resume> optionalResume = repository.findByEmail(email);
+    if (optionalResume.isEmpty() || !optionalResume.get().isVerified()) {
+        return ResponseEntity.status(403)
+                .body("Email not verified. Please complete OTP verification first.");
     }
+
+    try {
+        // 1️⃣ Extract text from resume
+        String extractedText = ResumeParser.extractText(file.getInputStream());
+
+        // 2️⃣ Extract email & phone
+        String extractedEmail = extractEmail(extractedText);
+        String extractedPhone = extractPhone(extractedText);
+
+        // 3️⃣ Match known skills
+        List<String> matchedSkills = knownSkills.stream()
+                .filter(skill -> extractedText.toLowerCase().contains(skill.toLowerCase()))
+                .distinct()
+                .collect(Collectors.toList());
+
+        System.out.println("🛠 Extracted Skills from Resume: " + matchedSkills);
+
+        // 4️⃣ Create uploads directory if not exists
+        Path uploadPath = Paths.get("uploads");
+        if (!Files.exists(uploadPath)) {
+            Files.createDirectories(uploadPath);
+        }
+
+        // 5️⃣ Save file safely
+        Path filePath = uploadPath.resolve(file.getOriginalFilename());
+        Files.copy(
+                file.getInputStream(),
+                filePath,
+                StandardCopyOption.REPLACE_EXISTING
+        );
+
+        // 6️⃣ Update resume entity
+        Resume resume = optionalResume.get();
+        resume.setPhone(extractedPhone != null ? extractedPhone : "Not Found");
+        resume.setSkills(!matchedSkills.isEmpty()
+                ? String.join(", ", matchedSkills)
+                : "Not Found");
+        resume.setFilePath(filePath.toString());
+
+        if (resume.getJobDescription() == null) {
+            resume.setJobDescription("Not provided");
+        }
+
+        repository.save(resume);
+
+        return ResponseEntity.ok("Resume uploaded and parsed successfully.");
+
+    } catch (Exception e) {
+        e.printStackTrace();
+        return ResponseEntity.internalServerError()
+                .body("Failed to upload or parse resume.");
+    }
+}
+
 
     // 🔹 Calculate skill match % between resume and JD
     public double calculateSkillMatchPercentage(String email, String jobDescription) {
